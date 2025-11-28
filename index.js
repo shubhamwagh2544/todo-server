@@ -1,7 +1,11 @@
 import express from 'express';
 const app = express();
+import cors from 'cors';
 
 const PORT = 3000;
+
+app.use(cors());
+app.use(express.json());
 
 const todos = [
     { id: 1, task: "Learn Rust", completed: false },
@@ -19,6 +23,13 @@ app.get('/', (req, res) => {
     const todo = getRandomTodo();
     res.status(200).json(todo);
 });
+
+app.get('/:id', (req, res) => {
+    const id = req.params.id;
+    let todo = todos.find(todo => todo.id === id);
+    todo = todo ?? getRandomTodo();
+    return res.status(200).json(todo);
+})
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
